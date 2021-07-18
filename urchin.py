@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+# from mischiefparsing import MisParsing
 from subprocess import Popen, PIPE
 from typing import Tuple
 from rich import print
@@ -27,6 +28,7 @@ kill_flag = False
 
 
 def getCommands() -> dict:
+    # TODO:read mischief
     """Read config file and get all available commands.
     available commands means that the option in the
     section whom name is same with the section.The
@@ -38,22 +40,22 @@ def getCommands() -> dict:
     # available commands
     commands = {}
 
-    vcsconfig = ConfigParser()
+    config = ConfigParser()
     # read the config file
-    vcsconfig.read("pyrunfile.conf", encoding="UTF-8")
+    config.read("urchinmake.conf", encoding="UTF-8")
     # get the sections list
-    sections = vcsconfig.sections()
+    sections = config.sections()
     # find the option in the section whom name is same
     # with the section.
     for section in sections:
-        options = vcsconfig.options(section)
+        options = config.options(section)
         if "ctl_ignore" in options:
-            ign_err = vcsconfig.getboolean(section, "ctl_ignore")
+            ign_err = config.getboolean(section, "ctl_ignore")
         else:
             ign_err = False
 
         if section in options:
-            commands[section] = (vcsconfig.get(section, section), ign_err)
+            commands[section] = (config.get(section, section), ign_err)
 
     return commands
 
@@ -83,6 +85,7 @@ def executeCommand(
     # ==================================================
     # use popen execute the command and return weather it
     # success
+    # TODO:auto change the paras by system
     p = Popen(
         command, shell=True, stdout=PIPE, stderr=PIPE, encoding="UTF-8")
     # ==================================================
@@ -96,7 +99,7 @@ def executeCommand(
     # ==================================================
     while p.poll() is None:
         if kill_flag:
-            # TODO:kill the subthread
+            # DONE:kill the subthread
             p.kill()
         # ==================================================
         # ---------------------ATTTION!---------------------
@@ -155,7 +158,7 @@ def sftwrCtrl(
         judgments.
         """
 
-        global fill_flag
+        global kill_flag
 
         # record log when ignore mode
         log = ""
@@ -231,7 +234,7 @@ def sftwrCtrl(
     else:
         print("Looks like your input is not supported command.")
         print("You can change or add support commands by")
-        print("editing [bold]runvcs.conf[/bold].")
+        print("editing [bold]Mischief[/bold].")
         print("Listed below are currently supported commands:")
         for key in commands:
             print(key)

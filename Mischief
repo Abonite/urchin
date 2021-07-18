@@ -1,0 +1,14 @@
+# This is an annotation
+
+# This is a command
+Command: command $(variable)$
+
+# This is a command that will be ignored the errors
+# but only for multicommands
+Command: [ignore]command1 [ignore]command2 ...
+
+# This is a variable
+var = something
+
+# You can add parameter in this way
+var += another thing
